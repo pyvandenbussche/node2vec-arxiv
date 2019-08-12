@@ -121,12 +121,13 @@ def export_to_tf_projector(filter=None):
     '''
     Write output files for Tensorflow embedding projector https://projector.tensorflow.org/
     '''
-    labels = np.genfromtxt(os.path.join(args.outputdir, LABEL_FILE), delimiter="\t",dtype='str', encoding="utf-8")
-    np.savetxt(os.path.join(args.outputdir, TF_EMBED_PROJ_LABEL_FILE), labels[:,1], delimiter="\t", fmt="%s", encoding="utf-8")
+    labels = np.genfromtxt(os.path.join(args.outputdir, LABEL_FILE), delimiter="\t",dtype='str', encoding="utf-8")[:,1]
+    labels[labels == ''] = "UNKNOWN"
+    np.savetxt(os.path.join(args.outputdir, TF_EMBED_PROJ_LABEL_FILE), labels, delimiter="\t", fmt="%s", encoding="utf-8")
     if filter is not None:
         mask_array = np.zeros(len(labels), dtype=bool)
         mask_array[filter] = True
-        np.savetxt(os.path.join(args.outputdir, TF_EMBED_PROJ_LABEL_FILE), labels[np.array(mask_array)][:, 1],
+        np.savetxt(os.path.join(args.outputdir, TF_EMBED_PROJ_LABEL_FILE), labels[np.array(mask_array)],
                    delimiter="\t", fmt="%s", encoding="utf-8")
 
         embed = np.genfromtxt(os.path.join(args.outputdir, EMBED_FILE), delimiter=" ", skip_header=1, encoding="utf-8")
@@ -136,7 +137,7 @@ def export_to_tf_projector(filter=None):
         np.savetxt(os.path.join(args.outputdir, TF_EMBED_PROJ_FILE), embed[np.array(mask_array)][:, 1:],
                    delimiter="\t", encoding="utf-8")
     else:
-        np.savetxt(os.path.join(args.outputdir, TF_EMBED_PROJ_LABEL_FILE), labels[:, 1],delimiter="\t",
+        np.savetxt(os.path.join(args.outputdir, TF_EMBED_PROJ_LABEL_FILE), labels,delimiter="\t",
                    fmt="%s", encoding="utf-8")
 
         embed = np.genfromtxt(os.path.join(args.outputdir, EMBED_FILE), delimiter=" ", skip_header=1, encoding="utf-8")
