@@ -122,7 +122,7 @@ def export_to_tf_projector(filter=None):
     Write output files for Tensorflow embedding projector https://projector.tensorflow.org/
     '''
     labels = np.genfromtxt(os.path.join(args.outputdir, LABEL_FILE), delimiter="\t",dtype='str', encoding="utf-8")
-    np.savetxt(os.path.join(args.outputdir, TF_EMBED_PROJ_LABEL_FILE), labels[:,1], delimiter="\t", fmt="%s")
+    np.savetxt(os.path.join(args.outputdir, TF_EMBED_PROJ_LABEL_FILE), labels[:,1], delimiter="\t", fmt="%s", encoding="utf-8")
     if filter is not None:
         mask_array = np.zeros(len(labels), dtype=bool)
         mask_array[filter] = True
