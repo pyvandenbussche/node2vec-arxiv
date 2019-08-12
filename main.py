@@ -120,16 +120,15 @@ def export_to_tf_projector(filter=None):
     '''
     Write output files for Tensorflow embedding projector https://projector.tensorflow.org/
     '''
-    labels = np.genfromtxt(os.path.join(args.outputdir, LABEL_FILE), delimiter="\t",dtype='str')
+    labels = np.genfromtxt(os.path.join(args.outputdir, LABEL_FILE), delimiter="\t",dtype='str', encoding="utf-8")
     np.savetxt(os.path.join(args.outputdir, TF_EMBED_PROJ_LABEL_FILE), labels[:,1], delimiter="\t", fmt="%s")
     if filter is not None:
         mask_array = np.zeros(len(labels), dtype=bool)
         mask_array[filter] = True
-        print(labels[np.array(mask_array)])
         np.savetxt(os.path.join(args.outputdir, TF_EMBED_PROJ_LABEL_FILE), labels[np.array(mask_array)][:, 1],
                    delimiter="\t", fmt="%s", encoding="utf-8")
 
-        embed = np.genfromtxt(os.path.join(args.outputdir, EMBED_FILE), delimiter=" ", skip_header=1)
+        embed = np.genfromtxt(os.path.join(args.outputdir, EMBED_FILE), delimiter=" ", skip_header=1, encoding="utf-8")
         # we need to sort the embeddings by index
         ind = np.argsort(embed[:, 0]);
         embed = embed[ind]
@@ -139,7 +138,7 @@ def export_to_tf_projector(filter=None):
         np.savetxt(os.path.join(args.outputdir, TF_EMBED_PROJ_LABEL_FILE), labels[:, 1],delimiter="\t",
                    fmt="%s", encoding="utf-8")
 
-        embed = np.genfromtxt(os.path.join(args.outputdir, EMBED_FILE), delimiter=" ", skip_header=1)
+        embed = np.genfromtxt(os.path.join(args.outputdir, EMBED_FILE), delimiter=" ", skip_header=1, encoding="utf-8")
         # we need to sort the embeddings by index
         ind = np.argsort(embed[:, 0]);
         embed = embed[ind]
