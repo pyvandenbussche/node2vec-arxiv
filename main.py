@@ -127,21 +127,23 @@ def export_to_tf_projector(filter=None):
         mask_array[filter] = True
         print(labels[np.array(mask_array)])
         np.savetxt(os.path.join(args.outputdir, TF_EMBED_PROJ_LABEL_FILE), labels[np.array(mask_array)][:, 1],
-                   delimiter="\t", fmt="%s")
+                   delimiter="\t", fmt="%s", encoding="utf-8")
 
         embed = np.genfromtxt(os.path.join(args.outputdir, EMBED_FILE), delimiter=" ", skip_header=1)
         # we need to sort the embeddings by index
         ind = np.argsort(embed[:, 0]);
         embed = embed[ind]
-        np.savetxt(os.path.join(args.outputdir, TF_EMBED_PROJ_FILE), embed[np.array(mask_array)][:, 1:], delimiter="\t")
+        np.savetxt(os.path.join(args.outputdir, TF_EMBED_PROJ_FILE), embed[np.array(mask_array)][:, 1:],
+                   delimiter="\t", encoding="utf-8")
     else:
-        np.savetxt(os.path.join(args.outputdir, TF_EMBED_PROJ_LABEL_FILE), labels[:, 1],delimiter="\t", fmt="%s")
+        np.savetxt(os.path.join(args.outputdir, TF_EMBED_PROJ_LABEL_FILE), labels[:, 1],delimiter="\t",
+                   fmt="%s", encoding="utf-8")
 
         embed = np.genfromtxt(os.path.join(args.outputdir, EMBED_FILE), delimiter=" ", skip_header=1)
         # we need to sort the embeddings by index
         ind = np.argsort(embed[:, 0]);
         embed = embed[ind]
-        np.savetxt(os.path.join(args.outputdir, TF_EMBED_PROJ_FILE), embed[:, 1:], delimiter="\t")
+        np.savetxt(os.path.join(args.outputdir, TF_EMBED_PROJ_FILE), embed[:, 1:], delimiter="\t", encoding="utf-8")
 
 
 def main(args):
@@ -161,7 +163,7 @@ def main(args):
     # save label dictionary to file
     node_to_idx = dict(zip(set_nodes, range(len(set_nodes))))
     idx_to_node = np.asarray([[v, k] for k, v in node_to_idx.items()])
-    np.savetxt(os.path.join(args.outputdir, LABEL_FILE), idx_to_node, delimiter="\t", fmt="%s")
+    np.savetxt(os.path.join(args.outputdir, LABEL_FILE), idx_to_node, delimiter="\t", fmt="%s", encoding="utf-8")
 
     nx_G = nx.DiGraph()
     nx_G.add_nodes_from(range(0, len(set_nodes)))
