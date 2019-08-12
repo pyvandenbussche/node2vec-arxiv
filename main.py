@@ -1,4 +1,5 @@
 import argparse
+import collections
 import beautifultable as bt
 from gensim.models import Word2Vec
 import networkx as nx
@@ -160,7 +161,7 @@ def main(args):
     # create an id to subject/object label mapping
     set_nodes = set().union(kg[:,0], kg[:,2])
     # save label dictionary to file
-    node_to_idx = dict(zip(set_nodes, range(len(set_nodes))))
+    node_to_idx = collections.OrderedDict(zip(set_nodes, range(len(set_nodes))))
     idx_to_node = np.asarray([[v, k] for k, v in node_to_idx.items()])
     np.savetxt(os.path.join(args.outputdir, LABEL_FILE), idx_to_node, delimiter="\t", fmt="%s", encoding="utf-8")
 
