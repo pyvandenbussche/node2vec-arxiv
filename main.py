@@ -1,17 +1,23 @@
+'''
+This scripts build on node2vec's implementation by Aditya Grover https://github.com/aditya-grover/node2vec
+It computes node embeddings for authors, papers and tags in the arXiv dataset available at
+https://www.kaggle.com/neelshah18/arxivdataset
+'''
+
 import argparse
 import collections
 import beautifultable as bt
-from gensim.models import Word2Vec
 import networkx as nx
-import node2vec
 import numpy as np
 import os
 import pandas as pd
 import time
+from gensim.models import Word2Vec
+from src import node2vec
 
-pd.set_option('display.max_columns', None)
-pd.set_option('display.expand_frame_repr', False)
-pd.set_option('max_colwidth', -1)
+# pd.set_option('display.max_columns', None)
+# pd.set_option('display.expand_frame_repr', False)
+# pd.set_option('max_colwidth', -1)
 
 EMBED_FILE = "kg_node2vec_embed.emb"
 LABEL_FILE = "kg_node2vec_label.tsv"
@@ -61,6 +67,10 @@ def learn_embeddings(walks):
 
 
 def load_data(input_file):
+    '''
+    Load arXiv data
+    :param input_file: path to arxiv file
+    '''
 
     # read the arxiv input json file
     df = pd.read_json(input_file, orient='records')
@@ -81,9 +91,12 @@ def load_data(input_file):
 
 
 def build_kg(df):
-    # for each row create an edge for each
-    # - paper -> author
-    # - paper -> tag
+    '''
+    for each row create an edge for each:
+    - paper -> author
+    - paper -> tag
+    '''
+
     kg = []
     author_set = tag_set = set()
     cpt_hasAuthor = cpt_hasTag = 0
@@ -149,7 +162,7 @@ def export_to_tf_projector(filter=None):
 
 def main(args):
     '''
-    Pipeline for representational learning for all nodes in a graph.
+    Pipeline for representational learning for all nodes in the ArXiv graph.
     '''
     print("Building Arxiv KG")
     # load data:
@@ -186,7 +199,7 @@ def main(args):
     print("Node2vec algorithm took: {}"
           .format(time.strftime("%Hh:%Mm:%Ss", time.gmtime(elapsed_time))))
 
-    # export embedding and  labels to tensorflow projector format
+    # export embedding and labels to tensorflow projector format
     print("Export the authors embeddings to TensorFlow project format")
     export_to_tf_projector(filter = [node_to_idx[author] for author in author_set])
 
