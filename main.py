@@ -98,19 +98,23 @@ def build_kg(df):
     '''
 
     kg = []
-    author_set = tag_set = set()
+    author_set = set()
+    tag_set = set()
+    article_set = set()
     cpt_hasAuthor = cpt_hasTag = 0
 
     for index, row in df.iterrows():
         paper_id = row['id']
-        author_set.update(row['author_list'])
-        tag_set.update(row['tags_list'])
 
         for author in row['author_list']:
             kg.append([paper_id, 'hasAuthor', author])
+            author_set.add(author)
+            article_set.add(paper_id)
             cpt_hasAuthor += 1
         for tag in row['tags_list']:
             kg.append([paper_id, 'hasTag', tag])
+            article_set.add(paper_id)
+            tag_set.add(tag)
             cpt_hasTag+=1
 
     kg = np.asarray(kg)
@@ -122,11 +126,12 @@ def build_kg(df):
     table.append_row(["   # hasAuthor relation", cpt_hasAuthor])
     table.append_row(["   # hasTag relation", cpt_hasTag])
     table.append_row(["# entities of type Author", len(author_set)])
-    table.append_row(["# entities of type Papers", len(df.index)])
+    table.append_row(["# entities of type Papers", len(article_set)])
     table.append_row(["# entities of type Tag", len(tag_set)])
     table.column_alignments[0] = bt.ALIGN_LEFT
     table.column_alignments[1] = bt.ALIGN_RIGHT
     print(table)
+
     return kg, author_set
 
 
@@ -180,11 +185,11 @@ def main(args):
     np.savetxt(os.path.join(args.outputdir, LABEL_FILE), idx_to_node, delimiter="\t", fmt="%s", encoding="utf-8")
 
     nx_G = nx.DiGraph()
-    nx_G.add_nodes_from(range(0, len(set_nodes)))
+    nx_G.add_nodes_from(range(len(set_nodes)))
     for s, p, o in kg:
-        nx_G.add_edge(node_to_idx[s], node_to_idx[o], type=p)
-    for edge in nx_G.edges():
-        nx_G[edge[0]][edge[1]]['weight'] = 1
+        nx_G.add_edge(node_to_idx[s], node_to_idx[o], type=p, weight=1)
+    # for edge in nx_G.edges():
+    #     nx_G[edge[0]][edge[1]]['weight'] = 1
     G_undir = nx_G.to_undirected()
 
     print("Computing transition probabilities and simulating the walks")
