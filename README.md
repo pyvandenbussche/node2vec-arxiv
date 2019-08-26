@@ -1,6 +1,6 @@
 # node2vec-arxiv
 
-[![Documentation Status](https://img.shields.io/badge/Blog-link_to_the_post-brightgreen.svg)](http://pyvandenbussche.info/?p=319&preview=true)
+[![Documentation Status](https://img.shields.io/badge/Blog-link_to_the_post-brightgreen.svg)](http://pyvandenbussche.info/2019/node2vec-and-arxiv-data/)
 
 Experiment using node2vec on arXiv papers metadata. 
 
