@@ -1,0 +1,5 @@
+beautifultable==0.7.0
+gensim==3.8.0
+networkx==2.2
+numpy==1.15.4
+pandas==0.24.1
